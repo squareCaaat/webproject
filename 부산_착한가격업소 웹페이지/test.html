@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Grid Layout with Filters</title>
+    <link href="testcss.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="wrapper">
+        <aside id="sidebar">
+            <h3 style="display: block;">검색 및 필터
+                <a href="#" class="closebtn" id="closebtn" onclick="closeBar()">&times;</a>
+            </h3>
+            <label for="searchbar">검색:</label>
+            <input type="text" placeholder="비빔밥"/>
+            <div class="filters">
+                <label for="filter-parking">주차장:</label>
+                <select id="filter-parking">
+                    <option value="all">모두</option>
+                    <option value="Y">있음</option>
+                    <option value="N">없음</option>
+                </select>
+                <label for="filter-category">업종:</label>
+                <select id="filter-category">
+                    <option value="all">모두</option>
+                    <option value="음식점">음식점</option>
+                    <!-- Add more categories as needed -->
+                </select>
+                <label for="filter-gu">구:</label>
+                <select id="filter-gu" onchange="updateDongOptions()">
+                    <option value="all">모두</option>
+                    <option value="중구">중구</option>
+                    <option value="동구">동구</option>
+                    <option value="서구">서구</option>
+                    <option value="영도구">영도구</option>
+                    <option value="부산진구">부산진구</option>
+                    <option value="동래구">동래구</option>
+                    <option value="연제구">연제구</option>
+                    <option value="금정구">금정구</option>
+                    <option value="북구">북구</option>
+                    <option value="사상구">사상구</option>
+                    <option value="사하구">사하구</option>
+                    <option value="강서구">강서구</option>
+                    <option value="남구">남구</option>
+                    <option value="해운대구">해운대구</option>
+                    <option value="수영구">수영구</option>
+                    <option value="기장군">기장군</option>
+                </select>
+                
+                <label for="filter-dong">동:</label>
+                <select id="filter-dong">
+                    <option value="all">모두</option>
+                </select>
+                
+                <button id="apply-filters">필터 적용</button>
+                <button id="reset-filters">필터 초기화</button>
+            </div>
+        </aside>
+        <div id="main">
+            <header style="display: inline-block;">
+                <span id="openbtn" style="font-size: 24px;cursor: pointer;" onclick="openBar()">&#9776</span>
+                <h2 style="display: inline;">로고</h2>
+                <nav style="display: inline-block;">
+                    <ul>
+                        <li>
+                            <a href="#">착한가격업소란?</a>
+                        </li>
+                        <li>
+                            <a href="#">착한가격업소</a>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+            <section>
+                <div class="map_wrapper">
+                    <div id="map"></div>
+                    <div class="custom_typecontrol radius_border">
+                        <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
+                        <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
+                    </div>
+                    <div class="custom_zoomcontrol radius_border"> 
+                        <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>  
+                        <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
+                    </div>
+                </div>
+                <div class="container" id="data-container">
+                    <!-- Cards will be inserted here -->
+                </div>
+            </section>
+            <footer>
+                <h3>End of Page</h3>
+            </footer>
+        </div>
+    </div>
+    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f84adcda322803bf9bc6bfc73b5d2523&libraries=services,clusterer,drawing"></script>
+    <!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3b9f7b019fc7ea588451181ce15298fe&libraries=LIBRARY&libraries=services,clusterer,drawing"></script> -->
+    <script type="text/javascript" src="testscript.js"></script>
+</body>
+</html>
