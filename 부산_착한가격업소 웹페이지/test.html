@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive Grid Layout with Filters</title>
     <link href="testcss.css" rel="stylesheet" />
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f84adcda322803bf9bc6bfc73b5d2523&libraries=LIBRARY&libraries=services,clusterer,drawing"></script>
 </head>
 <body>
     <div class="wrapper">
         <aside id="sidebar">
             <h3 style="display: block;">검색 및 필터
-                <a href="#" class="closebtn" id="closebtn" onclick="closeBar()">&times;</a>
+                <span class="closebtn" id="closebtn" style="cursor: pointer;" onclick="closeBar()">&times;</span>
             </h3>
-            <label for="searchbar">검색:</label>
-            <input type="text" placeholder="비빔밥"/>
+            <input id="store_name" type="text"/>
+            <button id="searchbtn">검색</button>
             <div class="filters">
                 <label for="filter-parking">주차장:</label>
                 <select id="filter-parking">
@@ -25,7 +26,8 @@
                 <select id="filter-category">
                     <option value="all">모두</option>
                     <option value="음식점">음식점</option>
-                    <!-- Add more categories as needed -->
+                    <option value="이미용">이미용</option>
+                    <option value="기타">기타</option>
                 </select>
                 <label for="filter-gu">구:</label>
                 <select id="filter-gu" onchange="updateDongOptions()">
@@ -47,20 +49,18 @@
                     <option value="수영구">수영구</option>
                     <option value="기장군">기장군</option>
                 </select>
-                
                 <label for="filter-dong">동:</label>
                 <select id="filter-dong">
                     <option value="all">모두</option>
                 </select>
-                
                 <button id="apply-filters">필터 적용</button>
                 <button id="reset-filters">필터 초기화</button>
             </div>
         </aside>
         <div id="main">
-            <header style="display: inline-block;">
+            <header>
                 <span id="openbtn" style="font-size: 24px;cursor: pointer;" onclick="openBar()">&#9776</span>
-                <h2 style="display: inline;">로고</h2>
+                <h2 id="logo">로고</h2>
                 <nav style="display: inline-block;">
                     <ul>
                         <li>
@@ -84,8 +84,10 @@
                         <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
                     </div>
                 </div>
-                <div class="container" id="data-container">
-                    <!-- Cards will be inserted here -->
+                <div class="container_wrapper">
+                    <div class="container" id="data-container">
+                        <!-- Cards will be inserted here -->
+                    </div>
                 </div>
             </section>
             <footer>
@@ -93,8 +95,10 @@
             </footer>
         </div>
     </div>
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=f84adcda322803bf9bc6bfc73b5d2523&libraries=services,clusterer,drawing"></script>
-    <!-- <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3b9f7b019fc7ea588451181ce15298fe&libraries=LIBRARY&libraries=services,clusterer,drawing"></script> -->
     <script type="text/javascript" src="testscript.js"></script>
 </body>
 </html>
+
+
+
+
