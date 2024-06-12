@@ -143,63 +143,66 @@ function displayData(data) {
     });
 }
 
-
-//지도에 해당 업체의 위치르 마커로 찍기
-// 주소로 좌표를 검색합니다
-function putMarkMap(data){
-    data.forEach((item)=>{
-        if(item.adres.indexOf('부산') == -1){
+function putMapMarkers(data) {
+    data.forEach(item => {
+        if (item.adres.indexOf('부산') === -1) {
             item.adres = '부산 ' + item.adres;
         }
         geocoder.addressSearch(item.adres, function(result, status) {
-            if (status === kakao.maps.services.Status.OK) { // 정상적으로 검색이 완료됐으면 
+            if (status === kakao.maps.services.Status.OK) {
                 var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                var marker = new kakao.maps.Marker({ // 결과값으로 받은 위치를 마커로 표시합니다
-                    map: map,
-                    position: coords
-                });
-                markers.push(marker);
-                // 마커에 커서가 오버됐을 때 마커 위에 표시할 인포윈도우를 생성합니다
+                var marker;
+                var imageSize = new kakao.maps.Size(40, 40); // 마커 이미지 크기 설정
+                if (item.cn === '음식점') {
+                    var imageSrc = 'restaurant.png'; 
+                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+                    marker = new kakao.maps.Marker({
+                        position: coords,
+                        image: markerImage
+                    });
+                } else if(item.cn == '이미용') {
+                    var imageSrc = 'beauty.png'; 
+                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+                    marker = new kakao.maps.Marker({
+                        position: coords,
+                        image: markerImage
+                    });
+                } else if(item.cn == '기타') {
+                    var imageSrc = 'etc.png'; 
+                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+                    marker = new kakao.maps.Marker({
+                        position: coords,
+                        image: markerImage
+                    });
+                }else {
+                    marker = new kakao.maps.Marker({
+                        position: coords
+                    });
+                }
+                
                 var iwContent = `<div style="width:150px;text-align:center;padding:6px 0;">${item.sj}</div>`;
                 var infowindow = new kakao.maps.InfoWindow({ // 인포윈도우를 생성합니다
                     content : iwContent
                 });
+                
                 kakao.maps.event.addListener(marker, 'mouseover', function() { // 마커에 마우스오버 이벤트를 등록합니다
                     infowindow.open(map, marker); // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
                 });
                 kakao.maps.event.addListener(marker, 'mouseout', function() { // 마커에 마우스아웃 이벤트를 등록합니다
                     infowindow.close(); // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
                 });
-                if(data.length == 1){
+
+                if (data.length === 1) {
                     map.setCenter(coords);
                 }
-            } 
-        });
-    });
-}
-function putClusterMap(data) {
-    const markers = data.map(item => {
-        if (item.adres.indexOf('부산') === -1) {
-            item.adres = '부산 ' + item.adres;
-        }
-        return new Promise((resolve, reject) => {
-            geocoder.addressSearch(item.adres, function(result, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                    var marker = new kakao.maps.Marker({
-                        position: coords
-                    });
-                    resolve(marker);
-                } else {
-                    resolve(null);
-                }
-            });
-        });
-    });
 
-    Promise.all(markers).then(markers => {
-        markers = markers.filter(marker => marker !== null);
-        clusterer.addMarkers(markers);
+                if (clusterer) {
+                    clusterer.addMarker(marker);
+                } else {
+                    marker.setMap(map);
+                }
+            }
+        });
     });
 }
 
@@ -302,11 +305,7 @@ async function applyFilters() {
 
     displayData(filteredData);
     clearMarkers(); // 기존 마커 제거
-    if (dongFilter !== 'all') {
-        putMarkMap(filteredData);
-    } else {
-        putClusterMap(filteredData);
-    }; // 필터링된 데이터로 마커 표시
+    putMapMarkers(filteredData);
  
     // 필터링된 데이터가 있으면 해당 가게의 주소를 카카오맵에서 검색하여 중심좌표로 지도 이동
     if (filteredData.length > 0) {
@@ -343,10 +342,10 @@ function resetFilters() {
 
     // 가게 정보 다시 보여주기
     fetchData().then(data => {
-        displayData(data);
         clearMarkers(); // 기존 마커 제거
-        putMarkMap(data); // 모든 데이터로 마커 표시
-        putClusterMap(filteredData);
+        putMapMarkers(data);
+        displayData(data);
+        relayout();
         // 지도 초기 설정 위치로 이동
         const defaultCoords = new kakao.maps.LatLng(35.18003483348194, 129.07493819187425);
         map.setCenter(defaultCoords);
@@ -380,7 +379,8 @@ document.getElementById('searchbtn').addEventListener('click', () => {
 
 // Initial load
 fetchData().then(data => {
-    putClusterMap(data);
+    putMapMarkers(data);
     displayData(data);
     relayout();
 });
+
